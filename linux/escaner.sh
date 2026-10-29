@@ -362,6 +362,16 @@ is_scan_root() {
     return 1
 }
 
+# Raices de cache que se muestran desglosadas por hijo directo.
+is_cache_root() {
+    local p=${1,,}
+    case "$p" in
+        "${HOME,,}/.cache"|/tmp|/var/tmp) return 0 ;;
+    esac
+    [[ $p =~ ^${H}/\.var/app/[^/]+/cache$ ]] && return 0
+    return 1
+}
+
 # ---------------------------------------------------------------- huella
 # Imprime "NIVEL<TAB>motivo" mirando el contenido, no el nombre.
 fingerprint() {
@@ -513,7 +523,7 @@ while IFS=$'\t' read -r -d '' size path; do
     if [[ -d $path && ! -L $path ]]; then
         depth=${path//[!\/]/}
         printf 'D\t%d\t%s\t%s\0' "${#depth}" "$size" "$path" >> "$WORK/dirs.raw"
-    elif (( size >= MIN_FILE_B )); then
+    elif (( size >= MIN_FILE_B )) || { (( size >= MIN_DIR_B )) && is_cache_root "$(dirname -- "$path")"; }; then
         printf 'F\t%s\t%s\0' "$size" "$path" >> "$WORK/files.raw"
     fi
 done < <(scan_du)
@@ -552,6 +562,11 @@ while IFS=$'\t' read -r -d '' _tag _depth bytes path; do
     ancestor_covered "$path" && continue
     classify "$path" || continue
     lvl=$CL why=$CR
+
+    # Las raices de cache se desglosan: sus hijos se clasifican uno a uno.
+    if [[ $lvl == SEGURO ]] && is_cache_root "$path"; then
+        continue
+    fi
 
     if [[ $lvl == NUNCA ]]; then
         # contenedor de una cache concreta: no se reporta ni se tapa

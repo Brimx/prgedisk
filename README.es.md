@@ -111,6 +111,8 @@ prgedisk --version          # prgedisk 1.0
   completa, abrir carpeta (`o`), exportar lo marcado (`e`) y total en vivo.
 - Detecta huérfanos de autostart/menú (`.desktop` con `Exec` inexistente) y los
   marca SEGURO; se borran solo con `--execute-safe` o marcándolos.
+- `~/.cache` se desglosa por aplicación: cada cache se puede marcar o
+  desmarcar por separado. `A` marca todo lo visible si querés vaciarla entera.
 - Solo toca cache HTTP y caches de código. El almacenamiento de sitios
   (`storage`, `IndexedDB`, `Local Storage`, `CacheStorage`) es NUNCA.
 - `ncdu` sigue sirviendo para explorar a mano.
@@ -158,8 +160,8 @@ prgedisk-ui                 # GUI; el botón Escanear cae a vivo si no hay CSV
 
 ## Resultados
 
-- **Linux (2026-10-28, seco):** 40,52 GiB SEGURO, 19,38 GiB REVISAR,
-  91,24 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos, 1,16 M rutas (28-106 s).
+- **Linux (2026-10-28, seco):** 39,32 GiB SEGURO, 19,38 GiB REVISAR,
+  92,29 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos, 1,16 M rutas (28-106 s).
 - **Windows:** ~27 GB (jul), ~20,8 GB (ago), ~27 GB (oct), según las capturas
   de WizTree.
 

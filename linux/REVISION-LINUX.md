@@ -19,7 +19,7 @@ Ms`) para que no parezca colgado.
 
 Pruebas: árbol falso (clasificación, borrado, symlinks, CSV), TUI en un pty
 (búsqueda, filtros, detalle, exportar, marcar/borrar) y un escaneo real seco de
-`$HOME` → **40,52 GiB SEGURO, 19,38 GiB REVISAR, 91,24 GiB NUNCA, 0
+`$HOME` → **39,32 GiB SEGURO, 19,38 GiB REVISAR, 92,29 GiB NUNCA, 0
 DESCONOCIDO**, 2 huérfanos (28-106 s según el caché de disco). No se borró
 nada.
 
@@ -124,6 +124,14 @@ la página. Corregido. El WPF ya lo hacía bien: solo `Cache`, `Code Cache`,
 Si querés borrar datos de un sitio (sesión, IndexedDB, Cache API), se hace
 desde el navegador, no desde este prgedisk. Prgedisk solo toca cache HTTP
 y caches de código.
+
+### `~/.cache` desglosada
+
+`~/.cache` no se reporta como un bloque: se clasifica cada hijo directo
+(`~/.cache/JetBrains`, `~/.cache/pip`, etc.) y los archivos sueltos de la raíz
+desde 20 MB. `A` marca todo lo visible para vaciarla entera; también se puede
+desmarcar una app concreta. `is_cache_root` excluye la raíz de la cobertura
+para que sus hijos se vean.
 
 ### Juegos: la ruta manda
 
@@ -239,7 +247,10 @@ NUNCA nunca entra en la lista de marcados.
    `b` para solo grandes, `e` exporta lo marcado, `o` abre la carpeta (probado
    con un `xdg-open` de prueba), marcar un REVISAR con espacio, confirmar con
    `s` y borrar solo ese ítem. `q` sale sin tocar nada.
-9. Juegos: `~/Games/ghost/cache_pc` → NUNCA por ruta; `~/Apps/ghost/cache_pc`
+9. Cache: `~/.cache/JetBrains`, `~/.cache/pip` y `~/.cache/loose.bin` se
+   reportan por separado; `~/.cache/opencode` sigue NUNCA y sobrevive al
+   borrado. Un archivo suelto de 25 MB en la raíz de `.cache` aparece.
+10. Juegos: `~/Games/ghost/cache_pc` → NUNCA por ruta; `~/Apps/ghost/cache_pc`
    → REVISAR y la huella lo sube a NUNCA por el `.psarc`. El filtro `steamapps/
    compatdata` no se marcó entero para no perder las caches de los prefijos.
 10. Huérfanos: autostart roto y menú roto detectados; `--execute-safe` los

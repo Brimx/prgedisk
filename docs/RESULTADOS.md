@@ -10,10 +10,10 @@ Equipo: CachyOS, home de ~52 GB, 1,16 M rutas.
 
 | Nivel | Elementos | Tamaño |
 |---|---:|---:|
-| SEGURO | 20 | 40,52 GiB |
+| SEGURO | 34 | 39,32 GiB |
 | REVISAR | 9 | 19,38 GiB |
 | DESCONOCIDO | 0 | 0 |
-| NUNCA | 65 | 91,24 GiB |
+| NUNCA | 68 | 92,29 GiB |
 | Huérfanos | 2 | 0,00 GiB |
 
 Duración: 28 s con la caché de disco caliente, 106 s con la fría.
@@ -23,7 +23,10 @@ Elementos más pesados:
 | Nivel | Tamaño | Ruta | Motivo |
 |---|---:|---|---|
 | SEGURO | 15,65 GiB | `~/steam-1222140.log` | log de Proton |
-| SEGURO | 15,31 GiB | `~/.cache` | cache del usuario |
+| SEGURO | 7,34 GiB | `~/.cache/JetBrains` | cache del usuario |
+| SEGURO | 3,08 GiB | `~/.cache/pip` | cache del usuario |
+| SEGURO | 1,43 GiB | `~/.cache/yay` | cache del usuario |
+| SEGURO | 1,04 GiB | `~/.cache/mozilla` | cache del usuario |
 | SEGURO | 2,40 GiB | `~/.npm` | cache de herramientas |
 | SEGURO | 2,17 GiB | `~/.local/share/Steam/steamapps/shadercache` | se regenera |
 | SEGURO | 1,71 GiB | `~/.nuget/packages` | se re-descarga |
@@ -35,6 +38,11 @@ El escaneo encontró dos huérfanos: un menú de Cemu que apunta a
 
 El `storage` de Firefox (2,00 GiB) se clasificó NUNCA: es Cache API y datos de
 sitios, no cache HTTP. Ese cambio bajó SEGURO de 41,66 a 40,52 GiB.
+
+`~/.cache` ahora se desglosa por aplicación (una fila por cache). `opencode` y
+`claude` quedaron como NUNCA explícitos en vez de quedar escondidos dentro del
+total de `~/.cache`; por eso SEGURO quedó en 39,32 GiB. Los archivos sueltos en
+la raíz de `~/.cache` se reportan desde 20 MB.
 
 El reporte completo de un árbol de demostración está en
 [`ejemplo-reporte.txt`](ejemplo-reporte.txt).
