@@ -56,9 +56,11 @@ Estado actual de la partición NTFS de Windows montada aparte (2026-10-28):
 | 279,4 GiB | 211,6 GiB | 67,9 GiB | 76 % |
 
 No hay un log por corrida de Windows; los resultados históricos salen de las
-capturas de WizTree antes/después. Guardarlas en
-[`capturas/`](capturas/README.md) como `wiztree-antes.png` y
-`wiztree-despues.png`.
+capturas de WizTree antes/después, guardadas en `resources/`:
+
+| Antes | Después |
+|---|---|
+| ![WizTree antes](https://raw.githubusercontent.com/Brimx/prgedisk/main/resources/antes.png) | ![WizTree después](https://raw.githubusercontent.com/Brimx/prgedisk/main/resources/despues.png) |
 
 ## Método
 
