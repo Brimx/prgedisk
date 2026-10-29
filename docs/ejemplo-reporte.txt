@@ -11,7 +11,7 @@ Escaneo y clasificación: 0s
 =============== RESULTADO ===============
 
 SEGURO  -  4 elementos, 0.10 GiB
-       0.04 GiB  [cache del usuario]  ~/.cache
+       0.04 GiB  [cache del usuario]  ~/.cache/pip
        0.02 GiB  [cache dentro de .config]  ~/.config/Code/Cache
        0.02 GiB  [steam: descargas y shadercache]  ~/.local/share/Steam/steamapps/downloading
        0.00 GiB  [autostart roto: /noexiste/app no existe]  ~/.config/autostart/broken.desktop
