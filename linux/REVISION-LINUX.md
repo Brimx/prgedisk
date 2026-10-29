@@ -19,7 +19,7 @@ Ms`) para que no parezca colgado.
 
 Pruebas: árbol falso (clasificación, borrado, symlinks, CSV), TUI en un pty
 (búsqueda, filtros, detalle, exportar, marcar/borrar) y un escaneo real seco de
-`$HOME` → **39,32 GiB SEGURO, 19,38 GiB REVISAR, 92,29 GiB NUNCA, 0
+`$HOME` → **39,47 GiB SEGURO, 19,38 GiB REVISAR, 92,83 GiB NUNCA, 0
 DESCONOCIDO**, 2 huérfanos (28-106 s según el caché de disco). No se borró
 nada.
 
@@ -129,9 +129,14 @@ y caches de código.
 
 `~/.cache` no se reporta como un bloque: se clasifica cada hijo directo
 (`~/.cache/JetBrains`, `~/.cache/pip`, etc.) y los archivos sueltos de la raíz
-desde 20 MB. `A` marca todo lo visible para vaciarla entera; también se puede
-desmarcar una app concreta. `is_cache_root` excluye la raíz de la cobertura
-para que sus hijos se vean.
+desde 20 MB. Los motivos distinguen paquetes/build, índices de IDE, cache HTTP
+de navegador, shaders/fuentes y Electron/CLI; el resto es "cache XDG".
+
+Las caches desconocidas pasan por una verificación de contenido: si tienen
+`*.db`/`*.sqlite`, `.git` o assets, se marcan NUNCA. Así apareció `cliphist`
+(historial de portapapeles) como NUNCA. `is_cache_root` excluye la raíz de la
+cobertura para que sus hijos se vean. `c` filtra solo cache y `A`/`m` permiten
+marcar todo o un grupo.
 
 ### Juegos: la ruta manda
 
@@ -177,8 +182,10 @@ ruta se recorta por la izquierda solo si no entra.
 | `1` `2` `3` | mostrar/ocultar SEGURO / REVISAR / DESCONOCIDO |
 | `n` | mostrar/ocultar NUNCA (no se puede marcar) |
 | `b` | solo elementos >= 1 GiB |
+| `c` | solo `~/.cache` (cache desglosada, ordenada por tamaño) |
 | `g` | agrupar: sin agrupar → por nivel → por dueño |
-| `0` | restaurar filtros de nivel y tamaño |
+| `m` | marcar/desmarcar el grupo del cursor (si hay agrupado) |
+| `0` | restaurar filtros de nivel, tamaño y cache |
 | `/` | buscar por ruta o motivo; vacío borra el filtro |
 | `o` | abrir la carpeta del elemento (o su carpeta madre) con `xdg-open` |
 | `e` | exportar lo marcado a `~/prgedisk-seleccion-<fecha>.csv` |
@@ -186,8 +193,8 @@ ruta se recorta por la izquierda solo si no entra.
 | `q` / `Esc` | salir sin borrar |
 
 Con `g` se cicla sin agrupar → por nivel → por dueño. Los encabezados muestran
-cantidad y GiB del grupo; el cursor solo se posa en elementos, no en
-encabezados. Al confirmar se restaura la terminal y aparece un resumen
+`[x]`/`[-]`/`[ ]`, cantidad y GiB del grupo; `m` marca o desmarca el grupo del
+cursor. El cursor solo se posa en elementos, no en encabezados. Al confirmar se restaura la terminal y aparece un resumen
 (`Borrar N elementos = X GiB`, desglose por nivel) pidiendo `s` para ejecutar.
 NUNCA nunca entra en la lista de marcados.
 
@@ -204,7 +211,7 @@ NUNCA nunca entra en la lista de marcados.
 | Dueño | columna | en el detalle |
 | Abrir carpeta | Explorer | `o` (xdg-open) |
 | Exportar selección | sí | `e` |
-| Agrupar | sí (por programa) | sí (`g`: nivel o dueño) |
+| Agrupar | sí (por programa) | sí (`g`: nivel o dueño, `m` marca el grupo) |
 | Tri-estado por grupo | sí | pendiente (marcar todo/visible, no por grupo) |
 | Ordenar por columna | sí | **pendiente** (orden fijo por nivel y tamaño) |
 | Huérfanos | sí (registro Run) | sí (`.desktop` de autostart/menú) |
@@ -247,9 +254,10 @@ NUNCA nunca entra en la lista de marcados.
    `b` para solo grandes, `e` exporta lo marcado, `o` abre la carpeta (probado
    con un `xdg-open` de prueba), marcar un REVISAR con espacio, confirmar con
    `s` y borrar solo ese ítem. `q` sale sin tocar nada.
-9. Cache: `~/.cache/JetBrains`, `~/.cache/pip` y `~/.cache/loose.bin` se
-   reportan por separado; `~/.cache/opencode` sigue NUNCA y sobrevive al
-   borrado. Un archivo suelto de 25 MB en la raíz de `.cache` aparece.
+9. Cache: `~/.cache/JetBrains` (índices), `~/.cache/pip` (paquetes) y
+   `~/.cache/loose.bin` se reportan por separado; `cliphist` y `opencode`
+   quedan NUNCA. Una cache desconocida con `data.db` también queda NUNCA. Un
+   archivo suelto de 25 MB en la raíz de `.cache` aparece.
 10. Juegos: `~/Games/ghost/cache_pc` → NUNCA por ruta; `~/Apps/ghost/cache_pc`
    → REVISAR y la huella lo sube a NUNCA por el `.psarc`. El filtro `steamapps/
    compatdata` no se marcó entero para no perder las caches de los prefijos.
@@ -258,8 +266,8 @@ NUNCA nunca entra en la lista de marcados.
 12. Agrupado en pty: `g` muestra encabezados por nivel y por dueño con cantidad
     y GiB; el cursor sigue moviéndose solo por elementos y el detalle cambia.
 13. Escaneo real seco de `$HOME` (sin borrar): 1,16 M rutas,
-    39,32 GiB SEGURO (15,65 GiB son `~/steam-1222140.log`), 19,38 GiB REVISAR,
-    92,29 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos (un menú de Cemu que apunta a
+    39,47 GiB SEGURO (15,65 GiB son `~/steam-1222140.log`), 19,38 GiB REVISAR,
+    92,83 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos (un menú de Cemu que apunta a
     `/tmp/.mount_*` y un AppImage de Riff que ya no existe). El `storage` de
     Firefox (2,00 GiB) pasó de SEGURO a NUNCA y `~/.cache` quedó desglosada por
     aplicación. La TUI se abrió y se salió sin borrar.

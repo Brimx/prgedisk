@@ -113,9 +113,9 @@ prgedisk --version          # prgedisk 1.0
   (`o`), export selection (`e`), and a live marked total.
 - Detects autostart/menu orphans (`.desktop` with a missing `Exec`) and marks
   them SEGURO; they are deleted only with `--execute-safe` or by selecting them.
-- `~/.cache` is broken down per application: each cache can be selected or
-  deselected separately. `A` marks everything visible if you want to clear it
-  all.
+- `~/.cache` is broken down per application, with a reason (packages, IDE,
+  browser, shaders) and a content check for unknown caches. `c` shows cache
+  only, `g` groups and `m` marks the group.
 - Only touches HTTP and compiled caches. Site storage (`storage`, `IndexedDB`,
   `Local Storage`, `CacheStorage`) is NUNCA.
 - `ncdu` is still useful for manual browsing.
@@ -161,8 +161,8 @@ prgedisk-ui                 # GUI; Escanear falls back to live without a CSV
 
 ## Results
 
-- **Linux (2026-10-28, dry run):** 39.32 GiB SEGURO, 19.38 GiB REVISAR,
-  92.29 GiB NUNCA, 0 DESCONOCIDO, 2 orphans, 1.16 M paths (28-106 s).
+- **Linux (2026-10-28, dry run):** 39.47 GiB SEGURO, 19.38 GiB REVISAR,
+  92.83 GiB NUNCA, 0 DESCONOCIDO, 2 orphans, 1.16 M paths (28-106 s).
 - **Windows:** ~27 GB (Jul), ~20.8 GB (Aug), ~27 GB (Oct), per the WizTree
   captures.
 

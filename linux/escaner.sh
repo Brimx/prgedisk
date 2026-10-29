@@ -202,6 +202,7 @@ add_rule NUNCA "datos de agentes CLI"            "^${H}/\\.(codex|claude|gemini|
 add_rule NUNCA "almacenamiento de sitios (sesiones)" "^${H}/(\\.mozilla|\\.config/(mozilla|google-chrome|chromium|brave-browser|vivaldi|microsoft-edge))/.*/(storage|sessionstore-backups|indexeddb|local storage|session storage|service worker|cachestorage)(/|$)"
 add_rule NUNCA "almacenamiento web de apps"      "/(indexeddb|local storage|session storage|service worker|cachestorage)(/|$)"
 add_rule NUNCA "runtime del agente (cache)"      "^${H}/\\.cache/(opencode|dsh|deepseek|claude|codex)(/|$)"
+add_rule NUNCA "historial de portapapeles"       "^${H}/\\.cache/(cliphist|clipse|quickshell-clipboard)(/|$)"
 add_rule NUNCA "toolchains, IDEs y agentes"      "^${H}/(\\.rustup|\\.cargo/bin|\\.nvm|\\.pyenv|\\.rbenv|\\.sdkman|\\.opencode|\\.pi|\\.vscode|\\.conda)(/|$)"
 add_rule NUNCA "apps en local/share"             "^${H}/\\.local/share/(opencode|claude|codex|jetbrains|rider|nvm|fnm|pnpm|volta|containers|docker|flatpak|dolphin-emu|eden|lutris|heroic)(/|$)"
 add_rule NUNCA "sandbox del agente"              "^/tmp/(dsh-|\\.dsh)|^/var/tmp/(dsh-|\\.dsh)"
@@ -217,7 +218,12 @@ add_rule NUNCA "binarios y bibliotecas"          "\\.(so(\\.[0-9.]+)*|a|o|elf|dl
 add_rule NUNCA "documento del usuario"           "\\.(docx?|xlsx?|pptx?|odt|ods|odp|pdf|psd|blend|kra|epub)$"
 
 # --- SEGURO: cache pura
-add_rule SEGURO "cache del usuario"              "^${H}/\\.cache(/|$)"
+add_rule SEGURO "cache de paquetes y build"      "^${H}/\\.cache/(pip|pip-tools|npm|yarn|pnpm|uv|yay|paru|pikaur|go-build|ccache|deno)(/|$)"
+add_rule SEGURO "indices de IDE"                 "^${H}/\\.cache/(jetbrains|code|vscode|clangd|cmake|sublime-text)(/|$)"
+add_rule SEGURO "cache HTTP de navegador"        "^${H}/\\.cache/(mozilla|chromium|google-chrome|brave|vivaldi|zen|firefox)(/|$)"
+add_rule SEGURO "shaders y fuentes"              "^${H}/\\.cache/(mesa_shader_cache|nvidia|thumbnails|fontconfig|font-manager)(/|$)"
+add_rule SEGURO "cache de Electron/CLI"          "^${H}/\\.cache/(electron|node-gyp|ms-playwright|cypress|gh|pipx)(/|$)"
+add_rule SEGURO "cache XDG (se regenera)"        "^${H}/\\.cache(/|$)"
 add_rule SEGURO "temporales del sistema"         "^/(tmp|var/tmp)(/|$)"
 add_rule SEGURO "cache de herramientas"          "^${H}/\\.(npm|yarn|pnpm-store|nuget/packages|gradle/caches|cargo/registry/cache|cargo/registry/src)(/|$)"
 add_rule SEGURO "cache dentro de .config"        "^${H}/\\.config/[^/]+/(cache|caches|code cache|cacheddata|cachedextensionvsixs|gpucache|dawncache|dawnwebgpucache|grshadercache|shadercache|blob_storage|component_crx_cache|extensions_crx_cache|tmp)(/|$)"
@@ -370,6 +376,12 @@ is_cache_root() {
     esac
     [[ $p =~ ^${H}/\.var/app/[^/]+/cache$ ]] && return 0
     return 1
+}
+
+# Apps de cache conocidas: no se les hace la verificacion de contenido.
+is_known_cache_app() {
+    local p=${1,,}
+    [[ $p =~ ^${H}/\.cache/(pip|pip-tools|npm|yarn|pnpm|uv|yay|paru|pikaur|go-build|ccache|deno|jetbrains|code|vscode|clangd|cmake|sublime-text|mozilla|chromium|google-chrome|brave|vivaldi|zen|firefox|mesa_shader_cache|nvidia|thumbnails|fontconfig|font-manager|electron|node-gyp|ms-playwright|cypress|gh|pipx)(/|$) ]]
 }
 
 # ---------------------------------------------------------------- huella
@@ -566,6 +578,18 @@ while IFS=$'\t' read -r -d '' _tag _depth bytes path; do
     # Las raices de cache se desglosan: sus hijos se clasifican uno a uno.
     if [[ $lvl == SEGURO ]] && is_cache_root "$path"; then
         continue
+    fi
+
+    # Cache desconocida: si adentro hay DB, .git o assets, no es descartable.
+    if [[ $lvl == SEGURO && $path == "$HOME"/.cache/* ]]; then
+        rel=${path#"$HOME"/.cache/}
+        if [[ $rel != */* ]] && ! is_known_cache_app "$path"; then
+            fp=$(fingerprint "$path")
+            if [[ ${fp%%$TAB*} == NUNCA ]]; then
+                lvl=NUNCA
+                why="${fp#*$TAB} (dentro de ~/.cache)"
+            fi
+        fi
     fi
 
     if [[ $lvl == NUNCA ]]; then
@@ -840,6 +864,7 @@ TOP=0
 FILTER=""
 NOTICE=""
 ONLY_BIG=0
+CACHE_ONLY=0
 GROUP=0
 declare -a T_LVL=() T_BYTES=() T_TYPE=() T_OWNER=() T_WHY=() T_PATH=() T_MARK=() VIEW=()
 declare -a DISP_KIND=() DISP_KEY=() DISP_IDX=()
@@ -930,6 +955,7 @@ rebuild_view() {
     for i in "${!T_PATH[@]}"; do
         [[ ${SHOW[${T_LVL[i]}]} == 1 ]] || continue
         if (( ONLY_BIG )) && (( T_BYTES[i] < COV_B )); then continue; fi
+        if (( CACHE_ONLY )) && [[ ${T_PATH[i]} != "$HOME"/.cache/* ]]; then continue; fi
         if [[ -n $FILTER ]]; then
             hay="${T_PATH[i],,} ${T_WHY[i],,}"
             [[ $hay == *"$FILTER"* ]] || continue
@@ -1016,6 +1042,37 @@ tui_unmark() {
     for i in "${VIEW[@]}"; do T_MARK[i]=0; done
 }
 
+tui_mark_group() {
+    (( GROUP )) || { NOTICE="Activa g para agrupar"; return 0; }
+    (( ${#VIEW[@]} )) || return 0
+    local i=${VIEW[CURSOR]} key j total=0 marked=0
+    if (( GROUP == 1 )); then key=${T_LVL[i]}; else key=${T_OWNER[i]}; fi
+    for j in "${VIEW[@]}"; do
+        if (( GROUP == 1 )); then
+            [[ ${T_LVL[j]} == "$key" ]] || continue
+        else
+            [[ ${T_OWNER[j]} == "$key" ]] || continue
+        fi
+        [[ ${T_LVL[j]} == "NUNCA" ]] && continue
+        total=$((total + 1))
+        (( ${T_MARK[j]:-0} )) && marked=$((marked + 1))
+    done
+    (( total )) || return 0
+    if (( marked == total )); then
+        for j in "${VIEW[@]}"; do
+            if (( GROUP == 1 )); then [[ ${T_LVL[j]} == "$key" ]] || continue; else [[ ${T_OWNER[j]} == "$key" ]] || continue; fi
+            T_MARK[j]=0
+        done
+        NOTICE="Grupo desmarcado"
+    else
+        for j in "${VIEW[@]}"; do
+            if (( GROUP == 1 )); then [[ ${T_LVL[j]} == "$key" ]] || continue; else [[ ${T_OWNER[j]} == "$key" ]] || continue; fi
+            [[ ${T_LVL[j]} == "NUNCA" ]] || T_MARK[j]=1
+        done
+        NOTICE="Grupo marcado"
+    fi
+}
+
 tui_open() {
     (( ${#VIEW[@]} )) || return 0
     local i p d
@@ -1081,7 +1138,7 @@ tui_search() {
 
 tui_draw() {
     tui_dims
-    local cand=0 segbytes=0 marked=0 mbytes=0 i row idx line mark tag size p sep pos chips status cur d1 d2 tipo help dp owner cur_disp d hn hb
+    local cand=0 segbytes=0 marked=0 mbytes=0 i row idx line mark tag size p sep pos chips status cur d1 d2 tipo help dp owner cur_disp d hn hb hm ht j mk
     for i in "${!T_PATH[@]}"; do
         [[ ${T_LVL[i]} != "NUNCA" ]] && cand=$((cand + 1))
         [[ ${T_LVL[i]} == "SEGURO" ]] && segbytes=$((segbytes + T_BYTES[i]))
@@ -1117,10 +1174,22 @@ tui_draw() {
         if [[ ${DISP_KIND[idx]} == "H" ]]; then
             hn=${DISP_IDX[idx]%%:*}
             hb=${DISP_IDX[idx]#*:}
+            hm=0; ht=0
+            for j in "${VIEW[@]}"; do
+                if (( GROUP == 1 )); then
+                    [[ ${T_LVL[j]} == "${DISP_KEY[idx]}" ]] || continue
+                else
+                    [[ ${T_OWNER[j]} == "${DISP_KEY[idx]}" ]] || continue
+                fi
+                [[ ${T_LVL[j]} == "NUNCA" ]] && continue
+                ht=$((ht + 1))
+                (( ${T_MARK[j]:-0} )) && hm=$((hm + 1))
+            done
+            if (( ht == 0 || hm == 0 )); then mk="[ ]"; elif (( hm == ht )); then mk="[x]"; else mk="[-]"; fi
             if (( hn == 1 )); then
-                line=" == ${DISP_KEY[idx]} · 1 elemento · $(gib "$hb") GiB =="
+                line=" $mk == ${DISP_KEY[idx]} · 1 elemento · $(gib "$hb") GiB =="
             else
-                line=" == ${DISP_KEY[idx]} · $hn elementos · $(gib "$hb") GiB =="
+                line=" $mk == ${DISP_KEY[idx]} · $hn elementos · $(gib "$hb") GiB =="
             fi
             printf '%s%s%s\033[K\n' "$C_BOLD" "$(tui_fit "$line")" "$C_RESET"
             continue
@@ -1180,14 +1249,18 @@ tui_draw() {
     (( marked > 0 )) && status+=" · Enter borrar"
     status+=" · $pos/${#VIEW[@]} visibles · Filtro: ${FILTER:-(ninguno)} · Niveles: $chips"
     (( ONLY_BIG )) && status+=" · Grande"
-    (( GROUP == 1 )) && status+=" · Agrupar: nivel"
-    (( GROUP == 2 )) && status+=" · Agrupar: dueño"
+    (( CACHE_ONLY )) && status+=" · Cache"
+    case $GROUP in
+        0) status+=" · Agrupar: no" ;;
+        1) status+=" · Agrupar: nivel" ;;
+        2) status+=" · Agrupar: dueño" ;;
+    esac
     [[ -n $NOTICE ]] && status=" $NOTICE ·$status"
     printf '%s\033[K\n' "$(tui_fit "$status")"
     if (( TCOLS >= 130 )); then
-        help=' Enter borrar · espacio marca · a SEGURO · A todo · d nada · 1/2/3 nivel · n NUNCA · b grande · g agrupar · / filtro · o abrir · e exportar · q salir'
+        help=' Enter borrar · espacio marca · c cache · g agrupar · m grupo · a SEGURO · A todo · d nada · 1/2/3 nivel · n NUNCA · b grande · / filtro · o abrir · e exportar · q salir'
     else
-        help=' Enter borrar · espacio marca · a SEGURO · d nada · / filtro · o abrir · e exportar · q salir'
+        help=' Enter borrar · espacio marca · c cache · g agrupar · m grupo · a SEGURO · / filtro · q salir'
     fi
     printf '%s%s%s\033[K' "$C_DIM" "$(tui_fit "$help")" "$C_RESET"
     printf '\033[J'
@@ -1281,8 +1354,10 @@ tui_run() {
             2)      tui_toggle_level REVISAR ;;
             3)      tui_toggle_level DESCONOCIDO ;;
             n)      tui_toggle_level NUNCA ;;
-            0)      SHOW[SEGURO]=1; SHOW[REVISAR]=1; SHOW[DESCONOCIDO]=1; ONLY_BIG=0; NOTICE="Filtros restaurados"; rebuild_view ;;
+            0)      SHOW[SEGURO]=1; SHOW[REVISAR]=1; SHOW[DESCONOCIDO]=1; ONLY_BIG=0; CACHE_ONLY=0; NOTICE="Filtros restaurados"; rebuild_view ;;
+            c)      CACHE_ONLY=$((1 - CACHE_ONLY)); if (( CACHE_ONLY )); then NOTICE="Solo cache"; else NOTICE="Cache: todas las rutas"; fi; rebuild_view ;;
             g)      tui_toggle_group ;;
+            m)      tui_mark_group ;;
             b)      ONLY_BIG=$((1 - ONLY_BIG)); if (( ONLY_BIG )); then NOTICE="Solo >= ${COV_GB} GiB"; else NOTICE="Filtro grande off"; fi; rebuild_view ;;
             o)      tui_open ;;
             e)      tui_export ;;

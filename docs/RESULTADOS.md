@@ -10,10 +10,10 @@ Equipo: CachyOS, home de ~52 GB, 1,16 M rutas.
 
 | Nivel | Elementos | Tamaño |
 |---|---:|---:|
-| SEGURO | 34 | 39,32 GiB |
+| SEGURO | 34 | 39,47 GiB |
 | REVISAR | 9 | 19,38 GiB |
 | DESCONOCIDO | 0 | 0 |
-| NUNCA | 68 | 92,29 GiB |
+| NUNCA | 69 | 92,83 GiB |
 | Huérfanos | 2 | 0,00 GiB |
 
 Duración: 28 s con la caché de disco caliente, 106 s con la fría.
@@ -41,8 +41,11 @@ sitios, no cache HTTP. Ese cambio bajó SEGURO de 41,66 a 40,52 GiB.
 
 `~/.cache` ahora se desglosa por aplicación (una fila por cache). `opencode` y
 `claude` quedaron como NUNCA explícitos en vez de quedar escondidos dentro del
-total de `~/.cache`; por eso SEGURO quedó en 39,32 GiB. Los archivos sueltos en
+total de `~/.cache`; por eso SEGURO quedó en 39,47 GiB. Los archivos sueltos en
 la raíz de `~/.cache` se reportan desde 20 MB.
+
+Las caches desconocidas se revisan por contenido: `cliphist` (historial de
+portapapeles) quedó NUNCA; `sidra-updater` y `caelestia` quedaron SEGURO.
 
 El reporte completo de un árbol de demostración está en
 [`ejemplo-reporte.txt`](ejemplo-reporte.txt).
