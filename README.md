@@ -3,20 +3,20 @@
 [**English**](README.md) · [Español](README.es.md)
 
 <p align="center">
-  <a href="https://github.com/Brimx/prgedisk/tree/v1.0"><img alt="version 1.0" src="https://img.shields.io/badge/version-1.0-blueviolet?style=plastic&amp;labelColor=1f2328"></a>
-  <a href="https://github.com/Brimx/prgedisk/blob/main/LICENSE"><img alt="license MIT" src="https://img.shields.io/badge/license-MIT-green?style=plastic&amp;labelColor=1f2328"></a>
-  <img alt="Linux" src="https://img.shields.io/badge/platform-Linux-FCC624?style=plastic&amp;logo=linux&amp;logoColor=black">
-  <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=plastic&amp;logo=windows&amp;logoColor=white">
-  <img alt="bash 4.4+" src="https://img.shields.io/badge/shell-bash%204.4%2B-4EAA25?style=plastic&amp;logo=gnubash&amp;logoColor=white">
-  <img alt="PowerShell 5.1+" src="https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?style=plastic&amp;logo=powershell&amp;logoColor=white">
-  <a href="https://github.com/Brimx/prgedisk"><img alt="docs ES and EN" src="https://img.shields.io/badge/docs-ES%20%7C%20EN-purple?style=plastic&amp;labelColor=1f2328"></a>
+  <a href="https://github.com/Brimx/prgedisk/tree/v1.0"><img alt="version 1.0" src="https://img.shields.io/badge/version-1.0-blueviolet?style=for-the-badge&amp;labelColor=1f2328"></a>
+  <a href="https://github.com/Brimx/prgedisk/blob/main/LICENSE"><img alt="license MIT" src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge&amp;labelColor=1f2328"></a>
+  <img alt="Linux" src="https://img.shields.io/badge/platform-Linux-FCC624?style=for-the-badge&amp;logo=linux&amp;logoColor=black">
+  <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=for-the-badge&amp;logo=windows&amp;logoColor=white">
+  <img alt="bash 4.4+" src="https://img.shields.io/badge/shell-bash%204.4%2B-4EAA25?style=for-the-badge&amp;logo=gnubash&amp;logoColor=white">
+  <img alt="PowerShell 5.1+" src="https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?style=for-the-badge&amp;logo=powershell&amp;logoColor=white">
+  <a href="https://github.com/Brimx/prgedisk"><img alt="docs ES and EN" src="https://img.shields.io/badge/docs-ES%20%7C%20EN-purple?style=for-the-badge&amp;labelColor=1f2328"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Brimx/prgedisk"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-Brimx%2Fprgedisk-181717?style=social&amp;logo=github"></a>
-  <img alt="version 1.0" src="https://img.shields.io/badge/version-1.0-blueviolet?style=social">
-  <img alt="license MIT" src="https://img.shields.io/badge/license-MIT-green?style=social">
-  <img alt="docs ES and EN" src="https://img.shields.io/badge/docs-ES%20%7C%20EN-lightgrey?style=social">
+  <a href="https://github.com/Brimx/prgedisk"><img alt="GitHub" height="32" src="https://img.shields.io/badge/GitHub-Brimx%2Fprgedisk-181717?style=social&amp;logo=github"></a>
+  <img alt="version 1.0" height="32" src="https://img.shields.io/badge/version-1.0-blueviolet?style=social">
+  <img alt="license MIT" height="32" src="https://img.shields.io/badge/license-MIT-green?style=social">
+  <img alt="docs ES and EN" height="32" src="https://img.shields.io/badge/docs-ES%20%7C%20EN-lightgrey?style=social">
 </p>
 
 A disk cleaner with explicit criteria: **SEGURO** (safe), **REVISAR** (review),
