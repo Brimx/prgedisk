@@ -116,6 +116,13 @@ prgedisk --version          # prgedisk 1.0
 - `ncdu` sigue sirviendo para explorar a mano.
 - Detalles y límites: `linux/REVISION-LINUX.md`.
 
+### Cómo borrar
+
+- En la TUI: `espacio` marca, `Enter` abre el resumen y `s` + `Enter` confirma.
+  `q` o `Esc` sale sin borrar.
+- Por lote: `prgedisk --execute-safe` borra lo SEGURO; `--include-review` agrega
+  REVISAR. Confirmá escribiendo `BORRAR`, o usá `--yes`.
+
 ### Reglas propias
 
 La mayoría de apps nuevas no necesitan reglas: su cache cae en `~/.cache`

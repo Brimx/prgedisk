@@ -118,6 +118,13 @@ prgedisk --version          # prgedisk 1.0
 - `ncdu` is still useful for manual browsing.
 - Details and limits: `linux/REVISION-LINUX.md`.
 
+### How to delete
+
+- In the TUI: `space` marks, `Enter` opens the summary, then type `s` + `Enter`
+  to confirm. `q` or `Esc` exits without deleting.
+- Batch: `prgedisk --execute-safe` deletes SEGURO; add `--include-review` for
+  REVISAR. Confirm by typing `BORRAR`, or use `--yes`.
+
 ### Custom rules
 
 Most new apps need no rules: their cache goes to `~/.cache` (SEGURO) and their

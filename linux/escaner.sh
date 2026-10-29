@@ -1161,16 +1161,18 @@ tui_draw() {
     [[ ${SHOW[DESCONOCIDO]} == 1 ]] && chips+="D " || chips+=". "
     [[ ${SHOW[NUNCA]} == 1 ]] && chips+="N" || chips+="."
     if (( ${#VIEW[@]} > 0 )); then pos=$((CURSOR + 1)); else pos=0; fi
-    status=" Marcados: $marked ($(gib "$mbytes") GiB) · $pos/${#VIEW[@]} visibles · Filtro: ${FILTER:-(ninguno)} · Niveles: $chips"
+    status=" Marcados: $marked ($(gib "$mbytes") GiB)"
+    (( marked > 0 )) && status+=" · Enter borrar"
+    status+=" · $pos/${#VIEW[@]} visibles · Filtro: ${FILTER:-(ninguno)} · Niveles: $chips"
     (( ONLY_BIG )) && status+=" · Grande"
     (( GROUP == 1 )) && status+=" · Agrupar: nivel"
     (( GROUP == 2 )) && status+=" · Agrupar: dueño"
     [[ -n $NOTICE ]] && status=" $NOTICE ·$status"
     printf '%s\033[K\n' "$(tui_fit "$status")"
     if (( TCOLS >= 130 )); then
-        help=' espacio marca · a SEGURO · A todo · d nada · 1/2/3 nivel · n NUNCA · b grande · g agrupar · / filtro · o abrir · e exportar · Enter borrar · q salir'
+        help=' Enter borrar · espacio marca · a SEGURO · A todo · d nada · 1/2/3 nivel · n NUNCA · b grande · g agrupar · / filtro · o abrir · e exportar · q salir'
     else
-        help=' espacio marca · a SEGURO · d nada · g agrupar · / filtro · o abrir · e exportar · Enter borrar · q salir'
+        help=' Enter borrar · espacio marca · a SEGURO · d nada · / filtro · o abrir · e exportar · q salir'
     fi
     printf '%s%s%s\033[K' "$C_DIM" "$(tui_fit "$help")" "$C_RESET"
     printf '\033[J'
@@ -1195,6 +1197,7 @@ read_key() {
                     6) IFS= read -rsn1 -t 0.03 junk; KEY="pgdn" ;;
                     1) IFS= read -rsn1 -t 0.03 junk; KEY="home" ;;
                     4) IFS= read -rsn1 -t 0.03 junk; KEY="end" ;;
+                    M) KEY="enter" ;;
                     *) KEY="esc" ;;
                 esac
             else
