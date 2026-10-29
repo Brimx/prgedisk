@@ -2,6 +2,15 @@
 
 [**English**](README.md) · [Español](README.es.md)
 
+<p align="center">
+  <a href="https://github.com/Brimx/prgedisk"><img alt="version 1.0" src="https://img.shields.io/badge/version-1.0-blue?style=for-the-badge"></a>
+  <a href="https://github.com/Brimx/prgedisk/blob/main/LICENSE"><img alt="license MIT" src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge"></a>
+  <img alt="platform Linux and Windows" src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows-informational?style=for-the-badge">
+  <img alt="bash 4.4+" src="https://img.shields.io/badge/shell-bash%204.4%2B-4EAA25?style=for-the-badge&amp;logo=gnubash&amp;logoColor=white">
+  <img alt="PowerShell 5.1+" src="https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?style=for-the-badge&amp;logo=powershell&amp;logoColor=white">
+  <a href="https://github.com/Brimx/prgedisk"><img alt="docs ES and EN" src="https://img.shields.io/badge/docs-ES%20%7C%20EN-lightgrey?style=for-the-badge"></a>
+</p>
+
 A disk cleaner with explicit criteria: **SEGURO** (safe), **REVISAR** (review),
 **DESCONOCIDO** (unknown) and **NUNCA** (never). When in doubt, don't delete.
 A false negative costs 2 GB; a false positive costs a broken install or lost
