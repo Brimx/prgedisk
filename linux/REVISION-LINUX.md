@@ -253,16 +253,16 @@ NUNCA nunca entra en la lista de marcados.
 10. Juegos: `~/Games/ghost/cache_pc` → NUNCA por ruta; `~/Apps/ghost/cache_pc`
    → REVISAR y la huella lo sube a NUNCA por el `.psarc`. El filtro `steamapps/
    compatdata` no se marcó entero para no perder las caches de los prefijos.
-10. Huérfanos: autostart roto y menú roto detectados; `--execute-safe` los
+11. Huérfanos: autostart roto y menú roto detectados; `--execute-safe` los
     borra y conserva el `.desktop` sano y el que usa `sh -c`.
-11. Agrupado en pty: `g` muestra encabezados por nivel y por dueño con cantidad
+12. Agrupado en pty: `g` muestra encabezados por nivel y por dueño con cantidad
     y GiB; el cursor sigue moviéndose solo por elementos y el detalle cambia.
-12. Escaneo real seco de `$HOME` (sin borrar): 1,16 M rutas,
-    40,52 GiB SEGURO (15,65 GiB son `~/steam-1222140.log`), 19,38 GiB REVISAR,
-    91,24 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos (un menú de Cemu que apunta a
+13. Escaneo real seco de `$HOME` (sin borrar): 1,16 M rutas,
+    39,32 GiB SEGURO (15,65 GiB son `~/steam-1222140.log`), 19,38 GiB REVISAR,
+    92,29 GiB NUNCA, 0 DESCONOCIDO, 2 huérfanos (un menú de Cemu que apunta a
     `/tmp/.mount_*` y un AppImage de Riff que ya no existe). El `storage` de
-    Firefox (2,00 GiB) pasó de SEGURO a NUNCA. La TUI se abrió y se salió sin
-    borrar.
+    Firefox (2,00 GiB) pasó de SEGURO a NUNCA y `~/.cache` quedó desglosada por
+    aplicación. La TUI se abrió y se salió sin borrar.
 
 ## 10. Reglas propias y exclusiones
 
