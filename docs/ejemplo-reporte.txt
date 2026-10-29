@@ -1,0 +1,30 @@
+=============== prgedisk (Linux) ===============
+Raíces   : ~
+Umbrales : carpetas > 1 MB · archivos > 5 MB · cobertura > 1 GiB
+Escaneando: ~
+  Una sola pasada de metadatos. En ~50 GB suele tardar ~30 s.
+Candidatos: 19 carpetas, 7 archivos. Clasificando...
+  huérfano (autostart): ~/.config/autostart/broken.desktop -> /noexiste/app
+Huérfanos de autostart/menú: 1
+Escaneo y clasificación: 0s
+
+=============== RESULTADO ===============
+
+SEGURO  -  4 elementos, 0.10 GiB
+       0.04 GiB  [cache del usuario]  ~/.cache
+       0.02 GiB  [cache dentro de .config]  ~/.config/Code/Cache
+       0.02 GiB  [steam: descargas y shadercache]  ~/.local/share/Steam/steamapps/downloading
+       0.00 GiB  [autostart roto: /noexiste/app no existe]  ~/.config/autostart/broken.desktop
+
+REVISAR  -  1 elementos, 0.03 GiB
+       0.03 GiB  [dependencias de proyecto]  ~/proyecto/node_modules
+
+NUNCA  -  3 elementos, 0.27 GiB
+
+Se conservan siempre: ~/.cache/opencode, ~/.cache/dsh, ~/.cache/claude*, /tmp/dsh-*,
+  ~/.ssh, ~/.gnupg, documentos, Escritorio, juegos y el directorio actual.
+Reporte completo: ~/reporte.csv
+Para navegar a mano: ncdu -x ~   (o la raíz que corresponda)
+Nota: en btrfs, borrar no libera hasta que expiren los snapshots (snapper list).
+
+NADA SE BORRÓ. Usá --execute-safe, o corré esto en una terminal para elegir a mano.

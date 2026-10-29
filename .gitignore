@@ -1,0 +1,7 @@
+# Reportes y logs que genera el prgedisk
+prgedisk-*.csv
+prgedisk-seleccion-*.csv
+limpiar-win-log.txt
+
+# Pruebas locales
+_test/

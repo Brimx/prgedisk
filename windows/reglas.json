@@ -1,0 +1,271 @@
+﻿{
+    "version":  1,
+    "fecha":  "2026-10-27",
+    "nota":  "El primer match gana. NUNCA va primero. Niveles: SEGURO, REVISAR, DESCONOCIDO, NUNCA.",
+    "reglas":  [
+                   {
+                       "orden":  0,
+                       "nivel":  "NUNCA",
+                       "motivo":  "nucleo de Windows",
+                       "regex":  "^c:\\\\windows\\\\(winsxs|system32|syswow64|assembly|servicing|installer|microsoft\\.net|systemresources|boot)(\\\\|$)"
+                   },
+                   {
+                       "orden":  1,
+                       "nivel":  "NUNCA",
+                       "motivo":  "carpeta raiz de Windows",
+                       "regex":  "^c:\\\\windows\\\\[^\\\\]+$"
+                   },
+                   {
+                       "orden":  2,
+                       "nivel":  "NUNCA",
+                       "motivo":  "apps de la Store",
+                       "regex":  "^c:\\\\program files\\\\windowsapps"
+                   },
+                   {
+                       "orden":  3,
+                       "nivel":  "NUNCA",
+                       "motivo":  "VS / dotnet / Office",
+                       "regex":  "^c:\\\\program files\\\\(microsoft visual studio|dotnet|microsoft office)"
+                   },
+                   {
+                       "orden":  4,
+                       "nivel":  "NUNCA",
+                       "motivo":  "juegos de Steam",
+                       "regex":  "^c:\\\\program files \\(x86\\)\\\\steam\\\\steamapps\\\\common"
+                   },
+                   {
+                       "orden":  5,
+                       "nivel":  "NUNCA",
+                       "motivo":  "tus juegos",
+                       "regex":  "^c:\\\\games"
+                   },
+                   {
+                       "orden":  6,
+                       "nivel":  "NUNCA",
+                       "motivo":  "sistema / restauracion",
+                       "regex":  "^c:\\\\(system volume information|recovery|\\$recycle\\.bin|\\$sysreset|\\$extend)"
+                   },
+                   {
+                       "orden":  7,
+                       "nivel":  "NUNCA",
+                       "motivo":  "metadatos NTFS (MFT, LogFile, Bitmap, UpCase)",
+                       "regex":  "^c:\\\\\\$"
+                   },
+                   {
+                       "orden":  8,
+                       "nivel":  "NUNCA",
+                       "motivo":  "Edge / WebView2",
+                       "regex":  "^c:\\\\program files( \\(x86\\))?\\\\microsoft\\\\edge"
+                   },
+                   {
+                       "orden":  9,
+                       "nivel":  "NUNCA",
+                       "motivo":  "memoria virtual",
+                       "regex":  "^c:\\\\(hiberfil\\.sys|pagefile\\.sys|swapfile\\.sys|dumpstack\\.log\\.tmp)"
+                   },
+                   {
+                       "orden":  10,
+                       "nivel":  "NUNCA",
+                       "motivo":  "base de datos del sistema",
+                       "regex":  "^c:\\\\programdata\\\\(microsoft\\\\windows\\\\apprepository|microsoft\\\\crypto|microsoft\\\\windows defender)"
+                   },
+                   {
+                       "orden":  11,
+                       "nivel":  "NUNCA",
+                       "motivo":  "tus documentos",
+                       "regex":  "\\\\(documents|onedrive|escritorio|desktop|pictures|imagenes|videos|music|musica)\\\\(?!.*\\\\(cache|temp|caches)$)"
+                   },
+                   {
+                       "orden":  12,
+                       "nivel":  "NUNCA",
+                       "motivo":  "partidas guardadas",
+                       "regex":  "\\\\(saved games|my games|savegame|savegames)\\\\"
+                   },
+                   {
+                       "orden":  13,
+                       "nivel":  "NUNCA",
+                       "motivo":  "datos y config de herramientas dev",
+                       "regex":  "\\\\(\\.local\\\\share|\\.opencode-mem|\\.codex|\\.bun|\\.claude|\\.gemini)(\\\\|$)"
+                   },
+                   {
+                       "orden":  14,
+                       "nivel":  "NUNCA",
+                       "motivo":  "config / claves / sandbox DSH",
+                       "regex":  "\\\\(\\.ssh|\\.gnupg|\\.dsh|\\.git)(\\\\|$)"
+                   },
+                   {
+                       "orden":  15,
+                       "nivel":  "NUNCA",
+                       "motivo":  "perfil de aplicacion",
+                       "regex":  "\\\\appdata\\\\roaming\\\\[^\\\\]+$"
+                   },
+                   {
+                       "orden":  16,
+                       "nivel":  "NUNCA",
+                       "motivo":  "datos de aplicacion",
+                       "regex":  "\\\\appdata\\\\roaming\\\\[^\\\\]+\\\\[^\\\\]+$"
+                   },
+                   {
+                       "orden":  17,
+                       "nivel":  "NUNCA",
+                       "motivo":  "aplicacion instalada",
+                       "regex":  "\\\\appdata\\\\local\\\\(programs|packages)\\\\[^\\\\]+$"
+                   },
+                   {
+                       "orden":  18,
+                       "nivel":  "NUNCA",
+                       "motivo":  "archivo de usuario",
+                       "regex":  "\\\\.(docx?|xlsx?|pptx?|pdf|psd|blend|kra|zip|7z|rar|iso|vhdx?|img)$"
+                   },
+                   {
+                       "orden":  19,
+                       "nivel":  "NUNCA",
+                       "motivo":  "assets de juego",
+                       "regex":  "\\\\.(psarc|pak|mpk|pck|vpk|bsa|ba2|bundle)$"
+                   },
+                   {
+                       "orden":  20,
+                       "nivel":  "SEGURO",
+                       "motivo":  "temporal del usuario",
+                       "regex":  "\\\\appdata\\\\local\\\\temp(\\\\|$)"
+                   },
+                   {
+                       "orden":  21,
+                       "nivel":  "SEGURO",
+                       "motivo":  "temporal de Windows",
+                       "regex":  "^c:\\\\windows\\\\temp(\\\\|$)"
+                   },
+                   {
+                       "orden":  22,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de app UWP",
+                       "regex":  "\\\\appdata\\\\local\\\\packages\\\\[^\\\\]+\\\\localcache(\\\\|$)"
+                   },
+                   {
+                       "orden":  23,
+                       "nivel":  "SEGURO",
+                       "motivo":  "estado temporal de app UWP",
+                       "regex":  "\\\\appdata\\\\local\\\\packages\\\\[^\\\\]+\\\\tempstate(\\\\|$)"
+                   },
+                   {
+                       "orden":  24,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de herramientas",
+                       "regex":  "\\\\appdata\\\\local\\\\(npm-cache|pip|ms-playwright|crashdumps|thumbnails|node-gyp)(\\\\|$)"
+                   },
+                   {
+                       "orden":  25,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de build",
+                       "regex":  "\\\\appdata\\\\local\\\\(yarn|pnpm|cargo|go-build|gradle)(\\\\|$)"
+                   },
+                   {
+                       "orden":  26,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache en perfil de app",
+                       "regex":  "\\\\appdata\\\\roaming\\\\[^\\\\]+\\\\(cache|caches|code cache|gpucache|dawncache|dawnwebgpucache|grshadercache|cachestorage|scriptcache|blob_storage|gpu cache|shadercache)(\\\\|$)"
+                   },
+                   {
+                       "orden":  27,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache en perfil de app",
+                       "regex":  "\\\\appdata\\\\local\\\\[^\\\\]+\\\\(cache|caches|code cache|gpucache|dawncache|dawnwebgpucache|grshadercache|cachestorage|scriptcache|blob_storage|gpu cache|shadercache|tempstate)(\\\\|$)"
+                   },
+                   {
+                       "orden":  28,
+                       "nivel":  "SEGURO",
+                       "motivo":  "logs y dumps de Windows",
+                       "regex":  "^c:\\\\windows\\\\(logs|livekernelreports|minidump)(\\\\|$)"
+                   },
+                   {
+                       "orden":  29,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de Windows Update",
+                       "regex":  "^c:\\\\windows\\\\softwaredistribution\\\\download(\\\\|$)"
+                   },
+                   {
+                       "orden":  30,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache P2P de updates",
+                       "regex":  "^c:\\\\windows\\\\serviceprofiles\\\\[^\\\\]+\\\\appdata\\\\local\\\\microsoft\\\\windows\\\\deliveryoptimization"
+                   },
+                   {
+                       "orden":  31,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de instaladores",
+                       "regex":  "^c:\\\\programdata\\\\(package cache|microsoft\\\\visualstudio\\\\packages|microsoft\\\\edgeupdate|usoshared)(\\\\|$)"
+                   },
+                   {
+                       "orden":  32,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de Defender",
+                       "regex":  "\\\\programdata\\\\microsoft\\\\windows defender\\\\(scans|definition updates\\\\backup)(\\\\|$)"
+                   },
+                   {
+                       "orden":  33,
+                       "nivel":  "SEGURO",
+                       "motivo":  "descargas temporales de Steam",
+                       "regex":  "\\\\steamapps\\\\(downloading|temp)(\\\\|$)"
+                   },
+                   {
+                       "orden":  34,
+                       "nivel":  "SEGURO",
+                       "motivo":  "dumps / logs / temporales",
+                       "regex":  "\\\\.(dmp|mdmp|etl|tmp|old|bak|log)$"
+                   },
+                   {
+                       "orden":  35,
+                       "nivel":  "SEGURO",
+                       "motivo":  "cache de herramientas dev",
+                       "regex":  "\\\\\\.cache\\\\"
+                   },
+                   {
+                       "orden":  36,
+                       "nivel":  "REVISAR",
+                       "motivo":  "dependencias de proyecto",
+                       "regex":  "\\\\(node_modules|__pycache__|\\.pytest_cache|\\.mypy_cache)(\\\\|$)"
+                   },
+                   {
+                       "orden":  37,
+                       "nivel":  "REVISAR",
+                       "motivo":  "artefactos de build",
+                       "regex":  "\\\\(dist|build|out|target|\\.next|\\.nuxt|coverage)(\\\\|$)"
+                   },
+                   {
+                       "orden":  38,
+                       "nivel":  "REVISAR",
+                       "motivo":  "cache dentro de programa o juego",
+                       "regex":  "(\\\\|^)(cache|caches|cache_pc|shadercache|shader cache|logs|log|crashdumps|crashdump|temp)(\\\\|$)"
+                   },
+                   {
+                       "orden":  39,
+                       "nivel":  "REVISAR",
+                       "motivo":  "cache de juego Steam",
+                       "regex":  "^c:\\\\program files \\(x86\\)\\\\steam\\\\steamapps\\\\common\\\\[^\\\\]+\\\\(shadercache|cache|logs)"
+                   },
+                   {
+                       "orden":  40,
+                       "nivel":  "REVISAR",
+                       "motivo":  "respaldo probable",
+                       "regex":  "\\.old$|_old$|\\.bak$|backup|respaldo"
+                   },
+                   {
+                       "orden":  41,
+                       "nivel":  "REVISAR",
+                       "motivo":  "instalador descargado",
+                       "regex":  "\\\\(downloads|desktop|escritorio)\\\\.*\\.(msi|exe|msix|appx)$"
+                   },
+                   {
+                       "orden":  42,
+                       "nivel":  "NUNCA",
+                       "motivo":  "binario de programa (no es instalador)",
+                       "regex":  "\\.(exe|dll|sys|ocx|node|pyd)$"
+                   },
+                   {
+                       "orden":  43,
+                       "nivel":  "REVISAR",
+                       "motivo":  "app instalada por usuario",
+                       "regex":  "\\\\appdata\\\\local\\\\programs\\\\"
+                   }
+               ]
+}
